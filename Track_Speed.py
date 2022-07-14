@@ -126,7 +126,7 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
         else:
             speed = ''
         
-        UI_box(box, img, label=label + str(speed) + 'km/h', color=color, line_thickness=3, boundingbox=True)
+        UI_box(box, img, label=label + '  '+str(speed) + 'km/h', color=color, line_thickness=3, boundingbox=True)
         
 
     return img
