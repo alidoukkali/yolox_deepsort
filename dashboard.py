@@ -13,10 +13,15 @@ from flask import Flask
 
 import dash_bootstrap_components as dbc
 
+from mainTracker import Tracker,vis_track,draw_lines,lines
+
 server = Flask(__name__)
 
 app = Dash(__name__,server = server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+tracker = Tracker(model='yolox-l',ckpt='weights/yolox_l.pth')
+
+Main = deque(maxlen =1000)
 
 # _____________________ Video feeds___________________
 
@@ -41,6 +46,11 @@ class VideoCamera(object):
 
            
         if success:
+            image =draw_lines(lines,image)
+            image,bbox,data = tracker.update(image,logger=False)
+            image=vis_track(image,bbox)
+            Main.extend(data)
+
             ret,buffer=cv2.imencode('.jpg',image)
             image=buffer.tobytes()
         return image
