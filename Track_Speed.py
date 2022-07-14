@@ -81,8 +81,8 @@ def draw_results(img):
     x = 50
     y = 50
     offset = 50
-    for  line_counter in object_counter.items():
-        Text = ' '.join([f"{label}={count}" for label, count in line_counter.items()])
+    for line_name, line_counter in object_counter.items():
+        Text = line_name + " : " + ' '.join([f"{label}={count}" for label, count in line_counter.items()])
         cv2.putText(img, Text, (x,y), 6, 1, (104, 52, 235), 3, cv2.LINE_AA)
         y = y+offset
     return img
