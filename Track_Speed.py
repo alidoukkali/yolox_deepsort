@@ -78,11 +78,11 @@ def update_counter(centerpoints, obj_name, id):
 
 # Draw the Final Results
 def draw_results(img):
-    x = 100
-    y = 100
+    x = 50
+    y = 50
     offset = 50
-    for line_name, line_counter in object_counter.items():
-        Text = line_name + " : " + ' '.join([f"{label}={count}" for label, count in line_counter.items()])
+    for  line_counter in object_counter.items():
+        Text = ' '.join([f"{label}={count}" for label, count in line_counter.items()])
         cv2.putText(img, Text, (x,y), 6, 1, (104, 52, 235), 3, cv2.LINE_AA)
         y = y+offset
     return img
