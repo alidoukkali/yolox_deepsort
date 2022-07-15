@@ -43,6 +43,7 @@ class VideoCamera(object):
         
         success, image = self.video.read()
         
+        
 
            
         if success:
@@ -55,11 +56,14 @@ class VideoCamera(object):
             image=buffer.tobytes()
         return image
         
-
+fps = 0.0
+res = "A x B"
+stream = "Stream 1"
 def gen(camera):
-    fps = 0.0
+    
     while True:
         frame = camera.get_frame()
+        fps =fps+1
         yield(b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -80,6 +84,21 @@ videofeeds = dbc.Col(width=4, children =[
     ]   
 )
 
+def create_card(Header,Value,cardcolor):
+    card=dbc.Col([
+        dbc.Card([
+            dbc.CardHeader(Header,style={'text-align':'center'}),
+            dbc.Cardbody([
+                html.H3(Value,style={'text-align':'center'})
+            ])
+        ],color=cardcolor,inverse=True,style = {
+            "width":"18rem",
+            'text-align':'center',
+            "vertical-align":"middle"
+        })
+        ])
+    return card
+    
 
 
 header = dbc.Col(width=10,
@@ -91,6 +110,7 @@ figure2=dbc.Col([dcc.Graph(id='live-graph2')],width=4)
     [
         Output('live-graph1','figure'),
         Output('live-graph2','figure'),
+        Output('cards','children'),
     ],
     [
         Input('visual-update','n_intervals')
@@ -101,8 +121,10 @@ def update_visuals():
     fig2 = go.FigureWidget()
 
 
-    df = pd.DataFrame(Main)
+    vehicleslastminute=0
+    vehiclestotal=0
     if len(df)!=0:
+        df = pd.DataFrame(Main)
         df = df.pivot_table(index=['Time'],
         columns = 'Category',aggfunc = {'Category:"count'}).fillna(0)
         df.columns = df.columns.droplevel(0)
@@ -110,10 +132,22 @@ def update_visuals():
         df.Time = pd.to_datetime(df.Time)
         columns = list(df.columns)
         columns.remove('Time')
-
+        values_sum = []
         for col in columns:
             fig1.add_scatter(name=col,x=df['Time'],y=df[col],fill = 'tonexty', line_shape='spline')
             fig2.add_scatter(name=col,x=df['Time'],y=df[col].cumsum(),fill = 'tonexty', line_shape='spline')
+            vehicleslastminute+=df[col].values[-1]
+            vehiclestotal+=df[col].cumsum().values[-1]
+            values_sum.append(df[col].sum())
+    cards = [
+        create_card(Header="Vehicles This Minute",Value = vehicleslastminute,cardcolor="primary"),
+        create_card(Header="Total Vehicles",Value = vehiclestotal,cardcolor="info"),
+
+        create_card(Header="Frame",Value = fps,cardcolor="secondary"),
+        create_card(Header="Resolution",Value = res,cardcolor="warning"),
+        create_card(Header="Stream",Value = stream,cardcolor="danger"),
+
+    ]
     return fig1,fig2
 
 
@@ -124,7 +158,7 @@ def update_visuals():
 app.layout = html.Div([
     dcc.Interval(id='visual-update',n_intervals=0),
     dbc.Row([header]),#Header
-    dbc.Row([]),#Row
+    dbc.Row(id="cards"),#Row
     dbc.Row([videofeeds,figure1,figure2])#VideoFeed and 2 graphs
 
 ])
