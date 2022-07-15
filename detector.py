@@ -16,7 +16,7 @@ class_names = COCO_CLASSES
 
 
 class Predictor():
-    def __init__(self, model='yolox-s', ckpt='yolox_s.pth', visual=True):
+    def __init__(self, model='yolox-l', ckpt='yolox_l.pth', visual=True):
         super(Predictor, self).__init__()
         self.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
         self.exp = get_exp_by_name(model)
@@ -72,8 +72,8 @@ class Predictor():
     
 
 if __name__=='__main__':
-    model='yolox-s'
-    ckpt='weights/yolox_s.pth'
+    model='yolox-l'
+    ckpt='weights/yolox_l.pth'
     detector = Predictor(model, ckpt)
 
     cap = cv2.VideoCapture(sys.argv[1]) 

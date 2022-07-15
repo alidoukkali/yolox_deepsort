@@ -199,7 +199,7 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
 
 # Tracking class to integrate Deepsort tracking with our detector
 class Tracker():
-    def __init__(self, filter_classes=None, model='yolox-s', ckpt='wieghts/yolox_s.pth'):
+    def __init__(self, filter_classes=None, model='yolox-l', ckpt='wieghts/yolox_l.pth'):
         self.detector = Predictor(model, ckpt)
         cfg = get_config()
         cfg.merge_from_file("deep_sort/configs/deep_sort.yaml")
