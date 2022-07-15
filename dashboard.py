@@ -47,7 +47,7 @@ class VideoCamera(object):
            
         if success:
             image =draw_lines(lines,image)
-            image,bbox,data = tracker.update(image,logger=False)
+            image,bbox,data = tracker.update(image,logger_=False)
             image=vis_track(image,bbox)
             Main.extend(data)
 
