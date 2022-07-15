@@ -7,8 +7,8 @@ import pandas as pd
 from collections import deque
 
 from flask import Flask, Response
-
-from dash import Dash, html, dcc
+import plotly.graph_objects as go
+from dash import Dash, html, dcc,Input,Output
 from flask import Flask
 
 import dash_bootstrap_components as dbc
@@ -85,15 +85,47 @@ videofeeds = dbc.Col(width=4, children =[
 header = dbc.Col(width=10,
     children=[ html.H1("Traffic flow Management", style ={'text-align':'center'})]
 )
-header = dbc.Col(width=10,
-    children=[ html.H1("Traffic flow Management", style ={'text-align':'center'})]
+figure1=dbc.Col([dcc.Graph(id='live-graph1')],width=4)
+figure2=dbc.Col([dcc.Graph(id='live-graph2')],width=4)
+@app.callback(
+    [
+        Output('live-graph1','figure'),
+        Output('live-graph2','figure'),
+    ],
+    [
+        Input('visual-update','n_intervals')
+    ]
 )
+def update_visuals():
+    fig1 = go.FigureWidget()
+    fig2 = go.FigureWidget()
+
+
+    df = pd.DataFrame(Main)
+    if len(df)!=0:
+        df = df.pivot_table(index=['Time'],
+        columns = 'Category',aggfunc = {'Category:"count'}).fillna(0)
+        df.columns = df.columns.droplevel(0)
+        df = df.reset_index()
+        df.Time = pd.to_datetime(df.Time)
+        columns = list(df.columns)
+        columns.remove('Time')
+
+        for col in columns:
+            fig1.add_scatter(name=col,x=df['Time'],y=df[col],fill = 'tonexty', line_shape='spline')
+            fig2.add_scatter(name=col,x=df['Time'],y=df[col].cumsum(),fill = 'tonexty', line_shape='spline')
+    return fig1,fig2
+
+
+
+
 
 
 app.layout = html.Div([
-    dbc.Row([]),#Header
+    dcc.Interval(id='visual-update',n_intervals=0),
+    dbc.Row([header]),#Header
     dbc.Row([]),#Row
-    dbc.Row([videofeeds]),#VideoFeed and 2 graphs
+    dbc.Row([videofeeds,figure1,figure2])#VideoFeed and 2 graphs
 
 ])
 
