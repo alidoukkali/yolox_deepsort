@@ -68,16 +68,34 @@ def video_feed():
     return Response(gen(VideoCamera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
+videofeed = html.Img(src="/video_feed")
+
+videofeeds = dbc.Col(width=4, children =[
+    html.Img(src="/video_feed", style={
+        'max-width':'100%',
+        'height':'auto',
+        'display':'block',
+        'margin-right':'auto'
+        })
+    ]   
+)
 
 
 
+header = dbc.Col(width=10,
+    children=[ html.H1("Traffic flow Management", style ={'text-align':'center'})]
+)
+header = dbc.Col(width=10,
+    children=[ html.H1("Traffic flow Management", style ={'text-align':'center'})]
+)
 
 
 app.layout = html.Div([
-    html.Img(src="/video_feed")
+    dbc.Row([]),#Header
+    dbc.Row([]),#Row
+    dbc.Row([videofeeds]),#VideoFeed and 2 graphs
 
 ])
-
 
 
 
