@@ -19,4 +19,4 @@ onnx-simplifier==0.3.5
 
 #Dash
 dash
-dash-bootstrap-component
+dash-bootstrap-components
