@@ -19,7 +19,7 @@ server = Flask(__name__)
 
 app = Dash(__name__,server = server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-tracker = Tracker(model='yolox-l',ckpt='weights/yolox_l.pth')
+tracker = Tracker(filter_classes=None, model='yolox-l',ckpt='weights/yolox_l.pth')
 
 Main = deque(maxlen =1000)
 
