@@ -32,6 +32,20 @@ speed_dict = {}
 
 class_names = COCO_CLASSES
 
+""" video = cv2.VideoCapture(sys.argv[1])
+width = int(image.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(image.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+lines  = [
+     {'Title' : 'North', 'Cords' : [(0,height-100), (width,height-100)]}
+    
+ ]
+
+object_counter = {
+     'North' : Counter()
+    
+ } """
+
 lines  = [
     {'Title' : 'North', 'Cords' : [(1720, 561), (1111, 505)]},
     {'Title' : 'South', 'Cords' : [(625, 727), (1532, 861)]},
